@@ -1,6 +1,6 @@
 import React from 'react';
 
-const shippingEntry = () => {
+const ShippingEntry = () => {
     let title = 'shippingEntry page';
 
     return (
@@ -13,4 +13,4 @@ const shippingEntry = () => {
     );
 };
 
-export default shippingEntry;
+export default ShippingEntry;
