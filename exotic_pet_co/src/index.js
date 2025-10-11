@@ -2,26 +2,34 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route, Navigate } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Purchase from './components/purchase';
 import Confirmation from './components/confirmation';
 import PaymentEntry from './components/paymentEntry';
 import ShippingEntry from './components/shippingEntry';
 import ViewOrder from './components/viewOrder';
+import { CartProvider } from "./context/CartContext";
+
+import { ThemeProvider } from "./context/ThemeContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/purchase" element={<Purchase />} />
-        <Route path="/" element={<Navigate replace to="/purchase" />} />
-        <Route path="/confirmation" element={<Confirmation />} />
-        <Route path="/paymentEntry" element={<PaymentEntry />} />
-        <Route path="/shippingEntry" element={<ShippingEntry />} />
-        <Route path="/viewOrder" element={<ViewOrder />} />
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Navigate replace to="/purchase" />} />
+            <Route path="/purchase" element={<Purchase />} />
+            <Route path="/purchase/viewOrder" element={<ViewOrder />} />
+            <Route path="/purchase/paymentEntry" element={<PaymentEntry />} />
+            <Route path="/purchase/shippingEntry" element={<ShippingEntry />} />
+            <Route path="/purchase/confirmation" element={<Confirmation />} />
+          </Routes>
+        </BrowserRouter>
+      </CartProvider>
+    </ThemeProvider>
+
   </React.StrictMode>
 );
 
