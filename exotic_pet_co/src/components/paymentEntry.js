@@ -1,6 +1,7 @@
 import {React, useState, useContext } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { PaymentContext } from '../context/PaymentContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 function PaymentEntry() {
@@ -39,34 +40,27 @@ function PaymentEntry() {
                 </div>
                 <div>
                     <form onSubmit={handleSubmit}>
-                        <div>
-                            <label>Card Number
-                                <input type='text' value={number} onChange={(e) => setNumber(e.target.value)} />
-                            </label>
+                        <div class="form-group">
+                            <label for="text">Card Number</label>
+                            <input type='text' class='form-control' value={number} onChange={(e) => setNumber(e.target.value)} />
                         </div>
-                        <div>
-                            <label>Expiration Date
-                                <input type='text' value={expDate} onChange={(e) => setExpDate(e.target.value)} />
-                            </label>
+                        <div class="form-group">
+                            <label for="text">Expiration Date</label>
+                            <input type='text' class='form-control' value={expDate} onChange={(e) => setExpDate(e.target.value)} />
                         </div>
-                        <div>
-                            <lable>CVV
-                                <input type='text' value={cvv} onChange={(e) => setCVV(e.target.value)} />
-                            </lable>
+                        <div class="form-group">
+                            <label for="text">CVV</label>
+                            <input type='text' class='form-control' value={cvv} onChange={(e) => setCVV(e.target.value)} />
                         </div>
-                        <div>
-                            <label>Card Holder Name
-                                <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                            </label>
+                        <div class="form-group">
+                            <label for="text">Card Holder Name</label>
+                            <input type="text" class='form-control' value={name} onChange={(e) => setName(e.target.value)} />
                         </div>
-                        <div>
-                            <lable>Zip Code
-                                <input type='text' value={zip} onChange={(e) => setZip(e.target.value)} />
-                            </lable>
+                        <div class="form-group">
+                            <label for="text">Zip Code</label>
+                            <input type='text' class='form-control' value={zip} onChange={(e) => setZip(e.target.value)} />
                         </div>
-                        <div>
-                            <input type='submit' />
-                        </div>
+                        <input type='submit' class="btn-default" />
                     </form>
                 </div>
             </div>
