@@ -1,6 +1,6 @@
 import React from 'react';
 
-const confirmation = () => {
+const Confirmation = () => {
     let title = 'confirmation page';
 
     return (
@@ -13,4 +13,4 @@ const confirmation = () => {
     );
 };
 
-export default confirmation;
+export default Confirmation;
