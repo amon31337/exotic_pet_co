@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
-import { useTheme } from "../context/ThemeContext";
-import { useCart } from "../context/CartContext";
-import ListHeader from "./ui/ListHeader";
-import ItemList from "./ui/ItemList";
-import CartSummary from "./ui/CartSummary";
+import { useTheme } from "../context/ThemeContext.js";
+import { useCart } from "../context/CartContext.js";
+import ListHeader from "./ui/ListHeader.js";
+import ItemList from "./ui/ItemList.js";
+import CartSummary from "./ui/CartSummary.js";
 import { catalog as baseCatalog } from "../fake_data/fake_data.js";
 
 const Purchase = () => {
