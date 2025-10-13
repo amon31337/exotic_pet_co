@@ -1,7 +1,9 @@
 import React, {useState, useContext} from 'react';
+import { Link, useNavigate } from "react-router-dom";
 import { ShippingContext } from '../context/ShippingContext';
 
 function ShippingEntry() {
+  const navigate = useNavigate();
   const { setShippingData } = useContext(ShippingContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -24,6 +26,7 @@ function ShippingEntry() {
     }
     setShippingData(newInfo);
     console.log('Form data:', { firstName, lastName, addressLine1, addressLine2, city, state, zip });
+    navigate('/purchase/viewOrder');
   };
 
   return (
