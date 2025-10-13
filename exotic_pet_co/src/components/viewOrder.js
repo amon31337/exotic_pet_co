@@ -1,16 +1,120 @@
-import React from 'react';
+// src/components/viewOrder.js
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { computeTotals } from "../helpers/priceHelper.js";
 
-const viewOrder = () => {
-    let title = 'viewOrder page';
+const ViewOrder = () => {
+  const navigate = useNavigate();
+  const { items, total: cartSubtotal } = useCart();
 
-    return (
-        <div>
-            <h1>
-                {title}
-            </h1>
+  // derive totals
+  const { taxRate, shipping, tax, total } = computeTotals(cartSubtotal);
+
+  const isEmpty = items.length === 0;
+
+  return (
+    <div className="min-vh-100" style={{ background: "var(--bg)", color: "var(--text)" }}>
+      <div className="container py-4">
+        <div className="d-flex align-items-center justify-content-between mb-3">
+          <h1 className="h4 m-0">Order Review</h1>
+          <div className="d-flex gap-2">
+            <Link className="btn btn-outline-secondary" to="/purchase">Back to Purchase</Link>
+          </div>
         </div>
 
-    );
+        {/* Cart items */}
+        <div className="card mb-3">
+          <div className="card-body">
+            <h5 className="card-title">Items</h5>
+            {isEmpty ? (
+              <p className="text-secondary mb-0">Your cart is empty. <Link to="/purchase">Add items</Link> to continue.</p>
+            ) : (
+              <div className="table-responsive">
+                <table className="table align-middle">
+                  <thead>
+                    <tr>
+                      <th>Item</th>
+                      <th className="text-end">Price</th>
+                      <th style={{ width: 100 }}>Qty</th>
+                      <th className="text-end">Line Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {items.map(it => (
+                      <tr key={it.id}>
+                        <td>{it.name}</td>
+                        <td className="text-end">${it.price.toFixed(2)}</td>
+                        <td>{it.qty}</td>
+                        <td className="text-end">${(it.price * it.qty).toFixed(2)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Totals */}
+        <div className="row g-3">
+          <div className="col-lg-7">
+            <div className="card h-100">
+              <div className="card-body">
+                <h5 className="card-title">Next Steps</h5>
+                <ol className="mb-3 text-secondary">
+                  <li>Enter <Link to="/purchase/paymentEntry">Payment</Link> details</li>
+                  <li>Enter <Link to="/purchase/shippingEntry">Shipping</Link> address</li>
+                  <li>Return here and <Link to="/purchase/confirmation">Confirm</Link> your order</li>
+                </ol>
+                <div className="d-flex flex-wrap gap-2">
+                  <Link to="/purchase/paymentEntry" className="btn btn-primary">Go to Payment</Link>
+                  <Link to="/purchase/shippingEntry" className="btn btn-outline-primary">Go to Shipping</Link>
+                  <button
+                    className="btn btn-success"
+                    disabled={isEmpty}
+                    onClick={() => navigate("/purchase/confirmation")}
+                  >
+                    Proceed to Confirmation
+                  </button>
+                </div>
+                {isEmpty && <p className="text-danger mt-2 mb-0">Add at least one item before confirming.</p>}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-lg-5">
+            <div className="card">
+              <div className="card-body">
+                <h5 className="card-title">Order Totals</h5>
+                <div className="d-flex justify-content-between">
+                  <span>Subtotal</span>
+                  <span>${cartSubtotal.toFixed(2)}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span>Estimated Tax ({(taxRate * 100).toFixed(2)}%)</span>
+                  <span>${tax.toFixed(2)}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span>Shipping {shipping === 0 && cartSubtotal > 0 ? "(Free)" : ""}</span>
+                  <span>${shipping.toFixed(2)}</span>
+                </div>
+                <hr />
+                <div className="d-flex justify-content-between fw-bold">
+                  <span>Total</span>
+                  <span>${total.toFixed(2)}</span>
+                </div>
+                <div className="text-secondary mt-2" style={{ fontSize: 12 }}>
+                  * Tax and shipping shown here are estimates for demo purposes.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
 };
 
-export default viewOrder;
+export default ViewOrder;
