@@ -34,7 +34,7 @@ const Purchase = () => {
         </div>
 
         <div className="row g-3">
-          <div className="col-lg-7">
+          <div className="col-lg-8">
             <div className="card">
               <div className="card-body">
                 <ListHeader
@@ -54,7 +54,7 @@ const Purchase = () => {
             </div>
           </div>
 
-          <div className="col-lg-5">
+          <div className="col-lg-4">
             <CartSummary />
             <div className="card mt-3">
               <div className="card-body">
