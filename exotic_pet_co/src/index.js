@@ -12,6 +12,7 @@ import ViewOrder from './components/viewOrder';
 import { CartProvider } from "./context/CartContext";
 import { PaymentProvider } from './context/PaymentContext';
 import { ThemeProvider } from "./context/ThemeContext";
+import { ShippingProvider } from './context/ShippingContext';
 
 
 
@@ -21,16 +22,18 @@ root.render(
     <ThemeProvider>
       <CartProvider>
         <PaymentProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Navigate replace to="/purchase" />} />
-              <Route path="/purchase" element={<Purchase />} />
-              <Route path="/purchase/viewOrder" element={<ViewOrder />} />
-              <Route path="/purchase/paymentEntry" element={<PaymentEntry />} />
-              <Route path="/purchase/shippingEntry" element={<ShippingEntry />} />
-              <Route path="/purchase/confirmation" element={<Confirmation />} />
-            </Routes>
-          </BrowserRouter>
+          <ShippingProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Navigate replace to="/purchase" />} />
+                <Route path="/purchase" element={<Purchase />} />
+                <Route path="/purchase/viewOrder" element={<ViewOrder />} />
+                <Route path="/purchase/paymentEntry" element={<PaymentEntry />} />
+                <Route path="/purchase/shippingEntry" element={<ShippingEntry />} />
+                <Route path="/purchase/confirmation" element={<Confirmation />} />
+              </Routes>
+            </BrowserRouter>
+          </ShippingProvider>
         </PaymentProvider>
       </CartProvider>
     </ThemeProvider>
