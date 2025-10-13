@@ -4,11 +4,21 @@ const CartContext = createContext();
 
 // items: { [id]: { id, name, price, img, qty } }
 // const initialState = { items: {} };
-const persisted = (() => {
-   try { return JSON.parse(localStorage.getItem("cart_state")) || { items: {} }; }
-   catch { return { items: {} }; }
-})();
-const initialState = persisted;
+const EMPTY = { items: {} };
+function initCartState() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem("cart_state"));
+    if (parsed && typeof parsed === "object" && parsed.items && typeof parsed.items === "object") {
+      return parsed;
+    }
+  } catch (_) {}
+  return EMPTY;
+}
+// const persisted = (() => {
+//    try { return JSON.parse(localStorage.getItem("cart_state")) || { items: {} }; }
+//    catch { return { items: {} }; }
+// })();
+// const initialState = persisted;
 
 function cartReducer(state, action) {
   switch (action.type) {
@@ -36,7 +46,7 @@ function cartReducer(state, action) {
       return { ...state, items: nextItems };
     }
     case "CLEAR":
-      return initialState;
+      return EMPTY; // initialState;
     default:
       return state;
   }
@@ -44,10 +54,17 @@ function cartReducer(state, action) {
 
 export function CartProvider({ children }) {
   // const [state, dispatch] = useReducer(cartReducer, initialState);
-   const [state, dispatch] = useReducer(cartReducer, initialState);
-   React.useEffect(() => {
-     localStorage.setItem("cart_state", JSON.stringify(state));
-   }, [state]);
+//    const [state, dispatch] = useReducer(cartReducer, initialState);
+//    React.useEffect(() => {
+//      localStorage.setItem("cart_state", JSON.stringify(state));
+//    }, [state]);
+  const [state, dispatch] = useReducer(cartReducer, undefined, initCartState);
+  React.useEffect(() => {
+    // remove key if empty, keeps storage clean
+    const isEmpty = !state.items || Object.keys(state.items).length === 0;
+    if (isEmpty) localStorage.removeItem("cart_state");
+    else localStorage.setItem("cart_state", JSON.stringify(state));
+  }, [state]);
   const api = useMemo(() => ({
     items: Object.values(state.items),
     total: Object.values(state.items).reduce((sum, it) => sum + it.price * it.qty, 0),

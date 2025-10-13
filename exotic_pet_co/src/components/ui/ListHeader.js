@@ -15,7 +15,7 @@ export default function ListHeader({ count, view, setView, sort, setSort, onTogg
           <option value="grid">Grid</option>
           <option value="list">List</option>
         </select>
-        <button className="btn btn-outline-secondary" onClick={onToggleTheme}>Toggle Theme</button>
+        {/* <button className="btn btn-outline-secondary" onClick={onToggleTheme}>Toggle Theme</button> */}
       </div>
     </div>
   );
