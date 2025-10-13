@@ -1,6 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import { ShippingContext } from '../context/ShippingContext';
 
 function ShippingEntry() {
+  const { setShippingData } = useContext(ShippingContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [addressLine1, setAddressLine1] = useState('');
@@ -11,12 +13,22 @@ function ShippingEntry() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Form data:', { firstName, lastName, addressLine1, addressLine2 });
+    let newInfo = {
+      firstName: firstName,
+      lastName: lastName,
+      addressLine1: addressLine1,
+      addressLine2: addressLine2, 
+      city: city,
+      state: state,
+      zip: zip
+    }
+    setShippingData(newInfo);
+    console.log('Form data:', { firstName, lastName, addressLine1, addressLine2, city, state, zip });
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Shipping Information</h2>
+    <div className="container mt-4">
+      <h2>Enter Shipping Details:</h2>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-1">
