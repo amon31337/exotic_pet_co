@@ -1,17 +1,26 @@
 // src/components/viewOrder.js
-import React from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { PaymentContext } from "../context/PaymentContext";
 import { computeTotals } from "../helpers/priceHelper.js";
 
 const ViewOrder = () => {
   const navigate = useNavigate();
   const { items, total: cartSubtotal } = useCart();
+  const { paymentData } = useContext(PaymentContext);
 
   // derive totals
   const { taxRate, shipping, tax, total } = computeTotals(cartSubtotal);
 
   const isEmpty = items.length === 0;
+  
+  // Check if payment information is complete
+  const isPaymentComplete = paymentData.cardNumber && 
+                           paymentData.expirationDate && 
+                           paymentData.cvvCode && 
+                           paymentData.cardHolderName && 
+                           paymentData.zipCode;
 
   return (
     <div className="min-vh-100" style={{ background: "var(--bg)", color: "var(--text)" }}>
@@ -72,13 +81,14 @@ const ViewOrder = () => {
                   <Link to="/purchase/shippingEntry" className="btn btn-outline-primary">Go to Shipping</Link>
                   <button
                     className="btn btn-success"
-                    disabled={isEmpty}
+                    disabled={isEmpty || !isPaymentComplete}
                     onClick={() => navigate("/purchase/confirmation")}
                   >
                     Proceed to Confirmation
                   </button>
                 </div>
                 {isEmpty && <p className="text-danger mt-2 mb-0">Add at least one item before confirming.</p>}
+                {!isEmpty && !isPaymentComplete && <p className="text-warning mt-2 mb-0">Please enter your payment information before confirming your order.</p>}
               </div>
             </div>
           </div>
