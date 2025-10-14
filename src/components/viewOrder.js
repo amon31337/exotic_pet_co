@@ -1,8 +1,8 @@
 // src/components/viewOrder.js
 import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCart } from "../context/CartContext";
-import { PaymentContext } from "../context/PaymentContext";
+import { useCart } from "../context/CartContext.js";
+import { PaymentContext } from "../context/PaymentContext.js";
 import { computeTotals } from "../helpers/priceHelper.js";
 
 const ViewOrder = () => {
