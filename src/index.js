@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Home from './home';
+import About from './about';
 import Purchase from './components/purchase';
 import Confirmation from './components/confirmation';
 import PaymentEntry from './components/paymentEntry';
@@ -24,12 +26,14 @@ root.render(
           <ShippingProvider>
             <BrowserRouter>
               <Routes>
-                <Route path="/" element={<Navigate replace to="/purchase" />} />
+                <Route path="/" element={<Navigate replace to="/home" />} />
+                <Route path="/home" element={<Home />} />
                 <Route path="/purchase" element={<Purchase />} />
                 <Route path="/purchase/viewOrder" element={<ViewOrder />} />
                 <Route path="/purchase/paymentEntry" element={<PaymentEntry />} />
                 <Route path="/purchase/shippingEntry" element={<ShippingEntry />} />
                 <Route path="/purchase/confirmation" element={<Confirmation />} />
+                <Route path="/about" element={<About />} />
               </Routes>
             </BrowserRouter>
           </ShippingProvider>
