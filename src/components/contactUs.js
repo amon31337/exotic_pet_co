@@ -4,11 +4,6 @@ import { Link } from "react-router-dom";
 function ContactUs() {
     return (
     <div className="container mt-5">
-        <div className="d-flex align-items-center justify-content-between mb-3">
-            <div className="d-flex gap-2">
-                <Link className="btn btn-outline-secondary" to="/home">Back to Home</Link>
-            </div>
-        </div>
       <div className="row justify-content-center">
         <div className="col-md-8 text-center">
           <h1 className="display-4 mb-4">Contact Exotic Pet Co.</h1>
