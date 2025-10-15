@@ -37,8 +37,7 @@ export default function CartSummary() {
             <div className="d-flex justify-content-between align-items-center">
               <strong>Total: ${total.toFixed(2)}</strong>
               <div className="d-flex gap-2">
-                <Link to="/purchase/viewOrder" className="btn btn-outline-primary">View Order</Link>
-                <Link to="/purchase/paymentEntry" className="btn btn-primary">Checkout</Link>
+                <Link to="/purchase/viewOrder" className="btn btn-primary">Checkout</Link>
               </div>
             </div>
           </>
