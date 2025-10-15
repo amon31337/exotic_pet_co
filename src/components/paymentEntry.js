@@ -6,12 +6,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function PaymentEntry() {
     const navigate = useNavigate();
-    const { setPaymentData } = useContext(PaymentContext);
-    const [number, setNumber] = useState('');
-    const [expDate, setExpDate] = useState('');
-    const [cvv, setCVV] = useState('');
-    const [name, setName] = useState('');
-    const [zip, setZip] = useState('');
+    const { paymentData, setPaymentData } = useContext(PaymentContext);
+    const [number, setNumber] = useState(paymentData['cardNumber']);
+    const [expDate, setExpDate] = useState(paymentData['expirationDate']);
+    const [cvv, setCVV] = useState(paymentData['cvvCode']);
+    const [name, setName] = useState(paymentData['cardHolderName']);
+    const [zip, setZip] = useState(paymentData['zipCode']);
 
 
     function handleSubmit(e) {
@@ -40,27 +40,27 @@ function PaymentEntry() {
                 </div>
                 <div>
                     <form onSubmit={handleSubmit}>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label for="text">Card Number</label>
-                            <input type='text' class='form-control' value={number} onChange={(e) => setNumber(e.target.value)} />
+                            <input type='text' className='form-control' value={number} onChange={(e) => setNumber(e.target.value)} />
                         </div>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label for="text">Expiration Date</label>
-                            <input type='text' class='form-control' value={expDate} onChange={(e) => setExpDate(e.target.value)} />
+                            <input type='text' className='form-control' value={expDate} onChange={(e) => setExpDate(e.target.value)} />
                         </div>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label for="text">CVV</label>
-                            <input type='text' class='form-control' value={cvv} onChange={(e) => setCVV(e.target.value)} />
+                            <input type='text' className='form-control' value={cvv} onChange={(e) => setCVV(e.target.value)} />
                         </div>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label for="text">Card Holder Name</label>
-                            <input type="text" class='form-control' value={name} onChange={(e) => setName(e.target.value)} />
+                            <input type="text" className='form-control' value={name} onChange={(e) => setName(e.target.value)} />
                         </div>
-                        <div class="form-group">
+                        <div className="form-group">
                             <label for="text">Zip Code</label>
-                            <input type='text' class='form-control' value={zip} onChange={(e) => setZip(e.target.value)} />
+                            <input type='text' className='form-control' value={zip} onChange={(e) => setZip(e.target.value)} />
                         </div>
-                        <input type='submit' class="btn-default" />
+                        <input type='submit' className="btn btn-primary" />
                     </form>
                 </div>
             </div>
