@@ -19,13 +19,14 @@ export default function CartSummary() {
           <>
             <div className="d-flex flex-column gap-2 mt-3">
               {items.map(it => (
-                <div key={it.id} className="d-grid" style={{ gridTemplateColumns: "1fr 100px 80px 100px", gap: 8, alignItems: "center" }}>
-                  <div>{it.name}</div>
-                  <div>${it.price.toFixed(2)}</div>
+                <div key={it.id} className="d-flex flex-wrap" style={{ gridTemplateColumns: "1fr 80px 80px 80px", gap: 8, alignItems: "center" }}>
+                  <div className="flex-grow-1">{it.name}</div>
+                  <div className="flex-grow-1">${it.price.toFixed(2)}</div>
                   <input
                     type="number"
                     min={0}
-                    className="form-control"
+                    className="form-control flex-grow-0"
+                    style={{ minWidth: "50px", maxWidth: "70px" }}
                     value={it.qty}
                     onChange={(e) => setQty(it.id, parseInt(e.target.value || "0", 10))}
                   />

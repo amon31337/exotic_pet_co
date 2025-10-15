@@ -1,6 +1,7 @@
 import React from "react";
 
-export default function ListHeader({ count, view, setView, sort, setSort, onToggleTheme }) {
+export default function 
+ListHeader({ count, view, setView, sort, setSort, onToggleTheme }) {
   return (
     <div className="d-flex align-items-center justify-content-between mb-2">
       <span className="badge text-bg-light border">{`Items: ${count}`}</span>

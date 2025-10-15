@@ -98,3 +98,9 @@ code {
   font-size: 12px;
   color: var(--subtle);
 }
+
+
+.min-w-120 { min-width: 120px; }
+.min-w-100 { min-width: 100px; }
+.min-w-70 { min-width: 70px; }
+.min-w-60 { min-width: 60px; }

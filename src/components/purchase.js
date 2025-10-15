@@ -56,7 +56,7 @@ const Purchase = () => {
 
           <div className="col-lg-4">
             <CartSummary />
-            <div className="card mt-3">
+            {/* <div className="card mt-3">
               <div className="card-body">
                 <h5 className="card-title">Quick Links</h5>
                 <ul className="text-secondary mb-0">
@@ -66,7 +66,7 @@ const Purchase = () => {
                   <li>Confirm on /purchase/confirmation</li>
                 </ul>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div> 
