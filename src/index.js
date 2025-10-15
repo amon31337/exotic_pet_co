@@ -10,6 +10,7 @@ import Confirmation from './components/confirmation';
 import PaymentEntry from './components/paymentEntry';
 import ShippingEntry from './components/shippingEntry';
 import ViewOrder from './components/viewOrder';
+import ContactUs from './components/contactUs';
 import { CartProvider } from "./context/CartContext";
 import { PaymentProvider } from './context/PaymentContext';
 import { ThemeProvider } from "./context/ThemeContext";
@@ -34,6 +35,7 @@ root.render(
                 <Route path="/purchase/shippingEntry" element={<ShippingEntry />} />
                 <Route path="/purchase/confirmation" element={<Confirmation />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/contactUs" element={<ContactUs />} />
               </Routes>
             </BrowserRouter>
           </ShippingProvider>
