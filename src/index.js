@@ -13,6 +13,7 @@ import Confirmation from './components/confirmation';
 import PaymentEntry from './components/paymentEntry';
 import ShippingEntry from './components/shippingEntry';
 import ViewOrder from './components/viewOrder';
+import ContactUs from './components/contactUs';
 import { CartProvider } from "./context/CartContext";
 import { PaymentProvider } from './context/PaymentContext';
 import { ThemeProvider } from "./context/ThemeContext";
