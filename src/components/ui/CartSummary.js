@@ -38,6 +38,7 @@ export default function CartSummary() {
               <strong>Total: ${total.toFixed(2)}</strong>
               <div className="d-flex gap-2">
                 <Link to="/purchase/viewOrder" className="btn btn-primary">Checkout</Link>
+                {/* <Link to="/purchase/paymentEntry" className="btn btn-primary">Checkout</Link> */}
               </div>
             </div>
           </>
