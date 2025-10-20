@@ -10,14 +10,14 @@ const Confirmation = () => {
     const { paymentData } = useContext(PaymentContext);
     const [confirmationNumber, setConfirmationNumber] = useState('');
 
-    // Check if payment information is complete
+    // check if payment information is complete
     const isPaymentComplete = paymentData.cardNumber && 
                              paymentData.expirationDate && 
                              paymentData.cvvCode && 
                              paymentData.cardHolderName && 
                              paymentData.zipCode;
 
-    // Redirect if no items in cart or payment not complete
+    // redirect if no items in cart or payment not complete
     useEffect(() => {
         if (items.length === 0) {
             navigate('/purchase');
@@ -29,7 +29,7 @@ const Confirmation = () => {
         }
     }, [items.length, isPaymentComplete, navigate]);
 
-    // Generate a random confirmation number when component mounts
+    // generate a random confirmation number when component mounts
     useEffect(() => {
         if (items.length > 0 && isPaymentComplete) {
             const generateConfirmationNumber = () => {
@@ -41,10 +41,10 @@ const Confirmation = () => {
         }
     }, [items.length, isPaymentComplete]);
 
-    // Calculate totals using the same logic as ViewOrder
+    // calculate totals using the same logic as ViewOrder
     const { taxRate, shipping, tax, total } = computeTotals(cartSubtotal);
 
-    // Format card number to show only last 4 digits
+    // format card number to show only last 4 digits
     const formatCardNumber = (cardNumber) => {
         if (!cardNumber) return 'N/A';
         return `**** **** **** ${cardNumber.slice(-4)}`;
@@ -53,7 +53,7 @@ const Confirmation = () => {
     return (
         <div className="min-vh-100" style={{ background: "var(--bg)", color: "var(--text)" }}>
             <div className="container py-4">
-                {/* Thank You Header */}
+                {/* Thank You header */}
                 <div className="text-center mb-5">
                     <div className="mb-3">
                         <i className="bi bi-check-circle-fill text-success" style={{ fontSize: '4rem' }}></i>
@@ -64,7 +64,7 @@ const Confirmation = () => {
                     </p>
                 </div>
 
-                {/* Confirmation Number */}
+                {/* confirmation number */}
                 <div className="card mb-4">
                     <div className="card-body text-center">
                         <h5 className="card-title">Order Confirmation</h5>
@@ -74,7 +74,7 @@ const Confirmation = () => {
                 </div>
 
                 <div className="row g-4">
-                    {/* Order Summary */}
+                    {/* order summary */}
                     <div className="col-lg-8">
                         <div className="card">
                             <div className="card-body">
@@ -115,9 +115,9 @@ const Confirmation = () => {
                         </div>
                     </div>
 
-                    {/* Order Details */}
+                    {/* order details */}
                     <div className="col-lg-4">
-                        {/* Payment Information */}
+                        {/* payment information */}
                         <div className="card mb-3">
                             <div className="card-body">
                                 <h6 className="card-title">Payment Information</h6>
@@ -129,7 +129,7 @@ const Confirmation = () => {
                             </div>
                         </div>
 
-                        {/* Order Totals */}
+                        {/* order totals */}
                         <div className="card mb-3">
                             <div className="card-body">
                                 <h6 className="card-title">Order Totals</h6>
@@ -153,7 +153,7 @@ const Confirmation = () => {
                             </div>
                         </div>
 
-                        {/* Next Steps */}
+                        {/* next steps */}
                         <div className="card">
                             <div className="card-body">
                                 <h6 className="card-title">What's Next?</h6>

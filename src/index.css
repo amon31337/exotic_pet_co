@@ -22,14 +22,15 @@ code {
   --border: #e5e7eb;
 }
 
-[data-theme="dark"] {
+/** dark theme deprecated */
+/* [data-theme="dark"] {
   --bg: #0b1220;
   --card: #111827;
   --text: #e5e7eb;
   --accent: #60a5fa;
   --subtle: #9ca3af;
   --border: #1f2937;
-}
+} */
 
 /* utility classes for layout */
 .app-shell {

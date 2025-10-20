@@ -12,7 +12,7 @@ export default function ItemList({ items, layout = "grid", onAdd }) {
     );
   }
 
-  // Grid layout using Bootstrap responsive rows
+  // if using grid layout
   return (
     <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3">
       {items.map((it) => (

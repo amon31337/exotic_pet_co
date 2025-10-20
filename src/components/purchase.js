@@ -7,7 +7,7 @@ import CartSummary from "./ui/CartSummary.js";
 import { catalog as baseCatalog } from "../fake_data/fake_data.js";
 
 const Purchase = () => {
-  const { mode, toggle } = useTheme();
+  // const { mode, toggle } = useTheme();
   const { add } = useCart();
 
   const [view, setView] = useState("grid");
@@ -30,7 +30,7 @@ const Purchase = () => {
       <div className="container py-4">
         <div className="d-flex align-items-center justify-content-between mb-3">
           <h1 className="h3 m-0">Exotic Pet Co — Purchase</h1>
-          <button className="btn btn-outline-secondary" onClick={toggle}>Theme: {mode}</button>
+          {/* <button className="btn btn-outline-secondary" onClick={toggle}>Theme: {mode}</button> */}
         </div>
 
         <div className="row g-3">
@@ -43,7 +43,7 @@ const Purchase = () => {
                   setView={setView}
                   sort={sort}
                   setSort={setSort}
-                  onToggleTheme={toggle}
+                  // onToggleTheme={toggle}
                 />
                 <ItemList
                   items={catalog}

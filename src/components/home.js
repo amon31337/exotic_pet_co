@@ -13,7 +13,7 @@ const Home = () => {
         position: 'relative'
       }}
     >
-      {/* Overlay for better text readability */}
+      {/* overlay for better text readability */}
       <div 
         className="position-absolute w-100 h-100"
         style={{
@@ -22,7 +22,7 @@ const Home = () => {
         }}
       ></div>
       
-      {/* Main content */}
+      {/* main content */}
       <div className="container text-center text-white" style={{ zIndex: 2, position: 'relative' }}>
         <div className="row justify-content-center">
           <div className="col-lg-8">
