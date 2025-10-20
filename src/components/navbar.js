@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark" style={{ minHeight: '40px' }}>
       <div className="container">
-        {/* Brand/Logo */}
+        {/* brand */}
         <Link className="navbar-brand" to="/home">
           <img 
             src="/images/epc_logo.png" 
@@ -15,7 +15,7 @@ const Navbar = () => {
           />
         </Link>
 
-        {/* Mobile toggle button */}
+        {/* mobile toggle button */}
         <button
           className="navbar-toggler"
           type="button"
@@ -28,7 +28,7 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Navigation links */}
+        {/* navigation links */}
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
             <li className="nav-item me-4">
@@ -53,7 +53,7 @@ const Navbar = () => {
             </li>
           </ul>
 
-          {/* Shopping cart icon */}
+          {/* shopping cart icon */}
           <div className="navbar-nav">
             <Link className="nav-link" to="/purchase/viewOrder">
               <i className="fas fa-shopping-cart fa-lg"></i>

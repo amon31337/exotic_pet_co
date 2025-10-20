@@ -4,17 +4,25 @@ import { ShippingContext } from '../context/ShippingContext';
 
 function ShippingEntry() {
   const navigate = useNavigate();
-  const { setShippingData } = useContext(ShippingContext);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [addressLine1, setAddressLine1] = useState('');
-  const [addressLine2, setAddressLine2] = useState('');
-  const [city, setCity] = useState('');
-  const [state, setState] = useState('');
-  const [zip, setZip] = useState('');
+  const { shippingData, setShippingData } = useContext(ShippingContext);
+  const [firstName, setFirstName] = useState(shippingData.firstName);
+  const [lastName, setLastName] = useState(shippingData.lastName);
+  const [addressLine1, setAddressLine1] = useState(shippingData.addressLine1);
+  const [addressLine2, setAddressLine2] = useState(shippingData.addressLine2);
+  const [city, setCity] = useState(shippingData.city);
+  const [state, setState] = useState(shippingData.state);
+  const [zip, setZip] = useState(shippingData.zip);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // simple validation only for postal, note to use better validation in production
+    const zipRegex = /^\d{5}$/;
+    if (!zipRegex.test(zip)) {
+      alert("Invalid ZIP code. It must be 5 digits.");
+      return;
+    }
+
     let newInfo = {
       firstName: firstName,
       lastName: lastName,
