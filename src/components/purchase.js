@@ -29,7 +29,6 @@ const Purchase = () => {
     <div className="min-vh-100" style={{ background: "var(--bg)", color: "var(--text)" }}>
       <div className="container py-4">
         <div className="d-flex align-items-center justify-content-between mb-3">
-          <h1 className="h3 m-0">Exotic Pet Co — Purchase</h1>
           {/* <button className="btn btn-outline-secondary" onClick={toggle}>Theme: {mode}</button> */}
         </div>
 
