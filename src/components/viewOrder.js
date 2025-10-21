@@ -1,14 +1,36 @@
 // src/components/viewOrder.js
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext.js";
 import { PaymentContext } from "../context/PaymentContext.js";
+import { ShippingContext } from "../context/ShippingContext.js";
 import { computeTotals } from "../helpers/priceHelper.js";
 
 const ViewOrder = () => {
   const navigate = useNavigate();
   const { items, total: cartSubtotal } = useCart();
   const { paymentData } = useContext(PaymentContext);
+  const { shippingData } = useContext(ShippingContext);
+  
+  // Initialize legal agreement state from localStorage
+  const [legalAgreementChecked, setLegalAgreementChecked] = useState(() => {
+    try {
+      const saved = localStorage.getItem('legalAgreementChecked');
+      return saved === 'true';
+    } catch (error) {
+      console.error("Error loading legal agreement state:", error);
+      return false;
+    }
+  });
+
+  // Save legal agreement state to localStorage whenever it changes
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('legalAgreementChecked', legalAgreementChecked.toString());
+    } catch (error) {
+      console.error("Error saving legal agreement state:", error);
+    }
+  }, [legalAgreementChecked]);
 
   // derive totals
   const { taxRate, shipping, tax, total } = computeTotals(cartSubtotal);
@@ -21,6 +43,14 @@ const ViewOrder = () => {
                            paymentData.cvvCode && 
                            paymentData.cardHolderName && 
                            paymentData.zipCode;
+
+  // Check if shipping information is complete
+  const isShippingComplete = shippingData.firstName && 
+                            shippingData.lastName && 
+                            shippingData.addressLine1 && 
+                            shippingData.city && 
+                            shippingData.state && 
+                            shippingData.zip;
 
   return (
     <div className="min-vh-100" style={{ background: "var(--bg)", color: "var(--text)" }}>
@@ -65,6 +95,37 @@ const ViewOrder = () => {
           </div>
         </div>
 
+        {/* Legal Agreement */}
+        <div className="card mb-3">
+          <div className="card-body">
+            <h5 className="card-title">Legal Agreement</h5>
+            <div className="form-check">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="legalAgreement"
+                checked={legalAgreementChecked}
+                onChange={(e) => setLegalAgreementChecked(e.target.checked)}
+              />
+              <label className="form-check-label" htmlFor="legalAgreement">
+                I have read and agree to the <Link to="/legal" target="_blank" className="text-primary">Customer Agreement</Link> and understand that:
+              </label>
+            </div>
+            <ul className="mt-2 mb-0 text-secondary small">
+              <li>I will provide proper care and humane treatment for any purchased animal</li>
+              <li>I will maintain appropriate habitat conditions for the animal's species</li>
+              <li>I will allow Exotic Pet Co. to conduct welfare inspections</li>
+              <li>I understand that Exotic Pet Co. may reclaim the animal if proper care is not provided</li>
+              <li>I am responsible for compliance with all applicable laws and regulations</li>
+            </ul>
+            {!legalAgreementChecked && (
+              <div className="alert alert-warning mt-3 mb-0">
+                <strong>Required:</strong> You must agree to the legal terms before proceeding with your order.
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* Totals */}
         <div className="row g-3">
           <div className="col-lg-7">
@@ -72,6 +133,7 @@ const ViewOrder = () => {
               <div className="card-body">
                 <h5 className="card-title">Next Steps</h5>
                 <ol className="mb-3 text-secondary">
+                  <li>Agree to the legal terms above</li>
                   <li>Enter <Link to="/purchase/paymentEntry">Payment</Link> details</li>
                   <li>Enter <Link to="/purchase/shippingEntry">Shipping</Link> address</li>
                   <li>Return here and <Link to="/purchase/confirmation">Confirm</Link> your order</li>
@@ -81,14 +143,16 @@ const ViewOrder = () => {
                   <Link to="/purchase/shippingEntry" className="btn btn-outline-primary">Go to Shipping</Link>
                   <button
                     className="btn btn-success"
-                    disabled={isEmpty || !isPaymentComplete}
+                    disabled={isEmpty || !isPaymentComplete || !isShippingComplete || !legalAgreementChecked}
                     onClick={() => navigate("/purchase/confirmation")}
                   >
                     Proceed to Confirmation
                   </button>
                 </div>
                 {isEmpty && <p className="text-danger mt-2 mb-0">Add at least one item before confirming.</p>}
-                {!isEmpty && !isPaymentComplete && <p className="text-warning mt-2 mb-0">Please enter your payment information before confirming your order.</p>}
+                {!isEmpty && !legalAgreementChecked && <p className="text-warning mt-2 mb-0">Please agree to the legal terms before confirming your order.</p>}
+                {!isEmpty && legalAgreementChecked && !isPaymentComplete && <p className="text-warning mt-2 mb-0">Please enter your payment information before confirming your order.</p>}
+                {!isEmpty && legalAgreementChecked && isPaymentComplete && !isShippingComplete && <p className="text-warning mt-2 mb-0">Please enter your shipping address before confirming your order.</p>}
               </div>
             </div>
           </div>
