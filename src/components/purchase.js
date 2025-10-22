@@ -1,29 +1,55 @@
-import React, { useMemo, useState } from "react";
-import { useTheme } from "../context/ThemeContext.js";
+import React, { useEffect, useMemo, useState } from "react";
 import { useCart } from "../context/CartContext.js";
 import ListHeader from "./ui/ListHeader.js";
 import ItemList from "./ui/ItemList.js";
 import CartSummary from "./ui/CartSummary.js";
-import { catalog as baseCatalog } from "../fake_data/fake_data.js";
+// import { catalog as baseCatalog } from "../fake_data/fake_data.js";
+
+// temporary API address. place in a config in production
+const API_URL = "https://etw6zgg8c6.execute-api.us-east-2.amazonaws.com/dev/inventory-management/inventory";
 
 const Purchase = () => {
-  // const { mode, toggle } = useTheme();
   const { add } = useCart();
 
   const [view, setView] = useState("grid");
   const [sort, setSort] = useState("name-asc");
+  const [items, setItems] = useState([]); // store fetched items
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    async function loadInventory() {
+      try {
+        const response = await fetch(API_URL);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setItems(data);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadInventory();
+  }, []);
 
   const catalog = useMemo(() => {
-    const items = [...baseCatalog];
+    const list = [...items];
     switch (sort) {
-      case "name-asc": items.sort((a,b) => a.name.localeCompare(b.name)); break;
-      case "name-desc": items.sort((a,b) => b.name.localeCompare(a.name)); break;
-      case "price-asc": items.sort((a,b) => a.price - b.price); break;
-      case "price-desc": items.sort((a,b) => b.price - a.price); break;
+      case "name-asc": list.sort((a,b) => a.name.localeCompare(b.name)); break;
+      case "name-desc": list.sort((a,b) => b.name.localeCompare(a.name)); break;
+      case "price-asc": list.sort((a,b) => a.price - b.price); break;
+      case "price-desc": list.sort((a,b) => b.price - a.price); break;
       default: break;
     }
-    return items;
-  }, [sort]);
+    return list;
+  }, [items, sort]);
+
+  if (loading) return <div className="container py-5 text-center">Loading inventory...</div>;
+  if (error) return <div className="container py-5 text-danger text-center">{error}</div>;
 
   return (
     <div className="min-vh-100" style={{ background: "var(--bg)", color: "var(--text)" }}>
