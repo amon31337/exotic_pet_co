@@ -4,6 +4,7 @@ Order Processing makes a connection to inventory-management so make sure to upda
 url when deploying in everyone's individual environment.
 
 Structure of json payload body expected in post to order-processing:
+```JSON
 {
     "productList": [
         {
@@ -36,3 +37,4 @@ Structure of json payload body expected in post to order-processing:
         "zip": "43210"
     }
 }
+```
