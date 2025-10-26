@@ -7,6 +7,7 @@ import CartSummary from "./ui/CartSummary.js";
 
 // temporary API address. place in a config in production
 const API_URL = "https://etw6zgg8c6.execute-api.us-east-2.amazonaws.com/dev/inventory-management/inventory";
+const ITEMS_BASE = `${API_URL}/items`;
 
 const Purchase = () => {
   const { add } = useCart();
@@ -16,6 +17,48 @@ const Purchase = () => {
   const [items, setItems] = useState([]); // store fetched items
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = async (query) => {
+    setError(null);
+    setLoading(true);
+
+    try {
+      let result = []
+      console.log("Searching URL:", query ? `${ITEMS_BASE}/${encodeURIComponent(query)}` : ITEMS_BASE);
+      // default
+      if (!query){
+        const response = await fetch(ITEMS_BASE);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        result = await response.json();
+        console.log("Fetched from URL:", query ? `${ITEMS_BASE}/${encodeURIComponent(query)}` : ITEMS_BASE);
+      } else {
+        let response = await fetch(`${ITEMS_BASE}/${encodeURIComponent(query)}`);
+        if (response.ok) {
+          const item = await response.json();
+          result = [item];
+        } else if (response.status === 404) {
+          // no items found, fall back to search by name
+          response = await fetch(`${ITEMS_BASE}?name=${encodeURIComponent(query)}`);
+          if (response.ok) {
+            result = await response.json();
+          } else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      }
+      // set displayed items
+      setItems(result);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   
   useEffect(() => {
     async function loadInventory() {
@@ -68,6 +111,9 @@ const Purchase = () => {
                   setView={setView}
                   sort={sort}
                   setSort={setSort}
+                  search={search}
+                  setSearch={setSearch}
+                  onSearch={handleSearch}
                   // onToggleTheme={toggle}
                 />
                 <ItemList
