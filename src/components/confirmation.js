@@ -1,21 +1,33 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext.js';
 import { PaymentContext } from '../context/PaymentContext.js';
 import { computeTotals } from '../helpers/priceHelper.js';
 
 const Confirmation = () => {
+    const location = useLocation();
     const navigate = useNavigate();
     const { items, total: cartSubtotal, clear } = useCart();
     const { paymentData } = useContext(PaymentContext);
     const [confirmationNumber, setConfirmationNumber] = useState('');
 
     // check if payment information is complete
-    const isPaymentComplete = paymentData.cardNumber && 
-                             paymentData.expirationDate && 
-                             paymentData.cvvCode && 
-                             paymentData.cardHolderName && 
-                             paymentData.zipCode;
+    const isPaymentComplete = paymentData.cardNumber &&
+        paymentData.expirationDate &&
+        paymentData.cvvCode &&
+        paymentData.cardHolderName &&
+        paymentData.zipCode;
+
+    useEffect(() => {
+        // prefer the code from API Gateway
+        if (location.state && location.state.confirmationCode) {
+            setConfirmationNumber(`EPC-${location.state.confirmationCode}`);
+        } else {
+            // fallback: local random (keeps current behavior if user reloads)
+            const random = Math.floor(100000 + Math.random() * 900000);
+            setConfirmationNumber(`EPC-000000`);
+        }
+    }, [location.state]);
 
     // redirect if no items in cart or payment not complete
     useEffect(() => {
@@ -27,19 +39,19 @@ const Confirmation = () => {
             navigate('/purchase/viewOrder');
             return;
         }
-    }, [items.length, isPaymentComplete, navigate]);
+    }, [items.length, isPaymentComplete, navigate, confirmationNumber]);
 
     // generate a random confirmation number when component mounts
-    useEffect(() => {
-        if (items.length > 0 && isPaymentComplete) {
-            const generateConfirmationNumber = () => {
-                const timestamp = Date.now().toString().slice(-6);
-                const random = Math.random().toString(36).substring(2, 8).toUpperCase();
-                return `EPC-${timestamp}-${random}`;
-            };
-            setConfirmationNumber(generateConfirmationNumber());
-        }
-    }, [items.length, isPaymentComplete]);
+    // useEffect(() => {
+    //     if (items.length > 0 && isPaymentComplete) {
+    //         const generateConfirmationNumber = () => {
+    //             const timestamp = Date.now().toString().slice(-6);
+    //             const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+    //             return `EPC-${timestamp}-${random}`;
+    //         };
+    //         setConfirmationNumber(generateConfirmationNumber());
+    //     }
+    // }, [items.length, isPaymentComplete]);
 
     // calculate totals using the same logic as ViewOrder
     const { taxRate, shipping, tax, total } = computeTotals(cartSubtotal);
@@ -94,8 +106,8 @@ const Confirmation = () => {
                                                 <tr key={item.id}>
                                                     <td>
                                                         <div className="d-flex align-items-center">
-                                                            <img 
-                                                                src={item.img} 
+                                                            <img
+                                                                src={item.img}
                                                                 alt={item.name}
                                                                 className="me-3 rounded"
                                                                 style={{ width: 50, height: 50, objectFit: 'cover' }}
@@ -164,7 +176,7 @@ const Confirmation = () => {
                                     <li>Expected delivery: 3-5 business days</li>
                                 </ul>
                                 <div className="d-grid gap-2">
-                                    <button 
+                                    <button
                                         className="btn btn-primary"
                                         onClick={() => {
                                             clear();
@@ -173,7 +185,7 @@ const Confirmation = () => {
                                     >
                                         Continue Shopping
                                     </button>
-                                    <button 
+                                    <button
                                         className="btn btn-outline-secondary"
                                         onClick={() => window.print()}
                                     >

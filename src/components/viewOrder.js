@@ -6,12 +6,52 @@ import { PaymentContext } from "../context/PaymentContext.js";
 import { ShippingContext } from "../context/ShippingContext.js";
 import { computeTotals } from "../helpers/priceHelper.js";
 
+const API_URL = "https://etw6zgg8c6.execute-api.us-east-2.amazonaws.com/dev/order-processing/order";
+
+
+
 const ViewOrder = () => {
   const navigate = useNavigate();
   const { items, total: cartSubtotal } = useCart();
   const { paymentData } = useContext(PaymentContext);
   const { shippingData } = useContext(ShippingContext);
-  
+
+  const handlePlaceOrder = async () => {
+    try {
+      // construct order information
+      const orderInfo = {
+        productList: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.qty,
+        })
+        ),
+        paymentInfo: paymentData,
+        shippingInfo: shippingData,
+      };
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderInfo),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Order placed successfully:", result);
+      navigate("/purchase/confirmation", { state: { confirmationCode: result.confirmationCode } });
+    }
+    catch (error) {
+      console.error("Error placing order:", error);
+      alert("There was an error placing your order. Please try again later.");
+    }
+  };
+
   // Initialize legal agreement state from localStorage
   const [legalAgreementChecked, setLegalAgreementChecked] = useState(() => {
     try {
@@ -36,21 +76,21 @@ const ViewOrder = () => {
   const { taxRate, shipping, tax, total } = computeTotals(cartSubtotal);
 
   const isEmpty = items.length === 0;
-  
+
   // Check if payment information is complete
-  const isPaymentComplete = paymentData.cardNumber && 
-                           paymentData.expirationDate && 
-                           paymentData.cvvCode && 
-                           paymentData.cardHolderName && 
-                           paymentData.zipCode;
+  const isPaymentComplete = paymentData.cardNumber &&
+    paymentData.expirationDate &&
+    paymentData.cvvCode &&
+    paymentData.cardHolderName &&
+    paymentData.zipCode;
 
   // Check if shipping information is complete
-  const isShippingComplete = shippingData.firstName && 
-                            shippingData.lastName && 
-                            shippingData.addressLine1 && 
-                            shippingData.city && 
-                            shippingData.state && 
-                            shippingData.zip;
+  const isShippingComplete = shippingData.firstName &&
+    shippingData.lastName &&
+    shippingData.addressLine1 &&
+    shippingData.city &&
+    shippingData.state &&
+    shippingData.zip;
 
   return (
     <div className="min-vh-100" style={{ background: "var(--bg)", color: "var(--text)" }}>
@@ -144,7 +184,7 @@ const ViewOrder = () => {
                   <button
                     className="btn btn-success"
                     disabled={isEmpty || !isPaymentComplete || !isShippingComplete || !legalAgreementChecked}
-                    onClick={() => navigate("/purchase/confirmation")}
+                    onClick={() => handlePlaceOrder()}
                   >
                     Proceed to Confirmation
                   </button>
