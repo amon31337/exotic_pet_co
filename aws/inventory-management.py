@@ -1,13 +1,39 @@
+import sys
+import pymysql
+import logging
 import json
+import os
+
+user_name = os.environ['USER_NAME']
+password = os.environ['PASSWORD']
+rds_proxy_host = os.environ['RDS_PROXY_HOST']
+db_name = os.environ['DB_NAME']
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+try:
+    conn = pymysql.connect(host=rds_proxy_host, user=user_name, passwd=password, db=db_name, connect_timeout=5)
+except pymysql.MySQLError as e:
+    logger.error("ERROR: Could not connect to database.")
+    logger.error(e)
+    sys.exit(1)
+
+logger.info("SUCCESS: Connection established")
 
 def lambda_handler(event, context):
-    inventory = [
-        {"id": "axolotl", "name": "Axolotl", "price": 119.99, "stock": 4, "img": "https://picsum.photos/seed/axo/400/300"},
-        {"id": "capybara", "name": "Capybara", "price": 249.00, "stock": 4, "img": "https://picsum.photos/seed/capy/400/300"},
-        {"id": "fennec", "name": "Fennec Fox", "price": 329.00, "stock": 4, "img": "https://picsum.photos/seed/fenn/400/300"},
-        {"id": "beetle", "name": "Hercules Beetle", "price": 39.99, "stock": 4, "img": "https://picsum.photos/seed/bug/400/300"},
-        {"id": "snake", "name": "Ball Python", "price": 179.00, "stock": 4, "img": "https://picsum.photos/seed/snek/400/300"}
-    ]
+    inventory = []
+    with conn.cursor() as cur:
+        cur.execute("select * from ITEM")
+        for row in cur:
+            inventory.append({
+                "id": row[1],
+                "name": row[2],
+                "price": row[4],
+                "stock": row[3],
+                "img": row[5]
+            })
+
 
     
     # get path and query parameters
