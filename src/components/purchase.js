@@ -6,7 +6,7 @@ import CartSummary from "./ui/CartSummary.js";
 // import { catalog as baseCatalog } from "../fake_data/fake_data.js";
 
 // temporary API address. place in a config in production
-const API_URL = "https://etw6zgg8c6.execute-api.us-east-2.amazonaws.com/dev/inventory-management/inventory";
+const API_URL = "https://kn3p63vwv2.execute-api.us-east-2.amazonaws.com/dev/inventory-management";
 const ITEMS_BASE = `${API_URL}/items`;
 
 const Purchase = () => {
@@ -68,7 +68,7 @@ const Purchase = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        setItems(data);
+        setItems(JSON.parse(data['body']));
       } catch (error) {
         setError(error);
       } finally {

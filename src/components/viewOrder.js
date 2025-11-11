@@ -6,7 +6,7 @@ import { PaymentContext } from "../context/PaymentContext.js";
 import { ShippingContext } from "../context/ShippingContext.js";
 import { computeTotals } from "../helpers/priceHelper.js";
 
-const API_URL = "https://etw6zgg8c6.execute-api.us-east-2.amazonaws.com/dev/order-processing/order";
+const API_URL = "https://kn3p63vwv2.execute-api.us-east-2.amazonaws.com/dev/orderProcessing/order";
 
 
 
@@ -37,6 +37,7 @@ const ViewOrder = () => {
         },
         body: JSON.stringify(orderInfo),
       });
+      console.log(JSON.stringify(orderInfo))
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
