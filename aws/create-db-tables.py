@@ -33,10 +33,11 @@ def lambda_handler(event, context):
         {"id": "snake", "name": "Ball Python", "price": 179.00, "stock": 4, "img": "https://picsum.photos/seed/snek/400/300"}
     ]
     item_sql = "CREATE TABLE IF NOT EXISTS ITEM (ID int auto_increment primary key, ITEM_ID varchar(255), NAME varchar(255), AVAILABLE_QUANTITY int, UNIT_PRICE double, IMAGE_URL varchar(255))"
-    order_sql = "create table if not exists CUSTOMER_ORDER (ID int auto_increment primary key, CUSTOMER_NAME varchar(255), SHIPPING_INFO_ID_FK int, PAYMENT_INFO_ID_FK int, STATUS varchar(255) default 'New')"
-    line_item_sql = "create table if not exists CUSTOMER_ORDER_LINE_ITEM (ID int auto_increment primary key, ITEM_NUMBER int, ITEM_NAME varchar(255), QUANTITY int, CUSTOMER_ORDER_ID_FK int)"
-    payment_sql = "create table if not exists PAYMENT_INFO (ID int auto_increment primary key, HOLDER_NAME varchar(255), CARD_NUM varchar(255), EXP_DATE varchar(255), CVV varchar(3))"
+    order_sql = "create table if not exists CUSTOMER_ORDER (ID int auto_increment primary key, CUSTOMER_NAME varchar(255), SHIPPING_INFO_ID_FK int, PAYMENT_INFO_TOKEN int, STATUS varchar(255) default 'New', ORDER_TIME datetime)"
+    line_item_sql = "create table if not exists CUSTOMER_ORDER_LINE_ITEM (ID int auto_increment primary key, ITEM_ID varchar(255), ITEM_NAME varchar(255), QUANTITY int, CUSTOMER_ORDER_ID_FK int)"
+    payment_sql = "create table if not exists PAYMENT_INFO (ID int auto_increment primary key, CONFIRMATION_TOKEN int, HOLDER_NAME varchar(255), CARD_NUM varchar(255), EXP_DATE varchar(255), CVV varchar(3))"
     shipping_sql = "create table if not exists SHIPPING_INFO (ID int auto_increment primary key, ADDRESS1 varchar(255), ADDRESS2 varchar(255), CITY varchar(255), STATE varchar(255), POSTAL_CODE varchar(255))"
+    packet_sql = "create table if not exists PACKET (ID int auto_increment primary key, ITEM_ID varchar(255), SHIPPING_INFO_ID int, WEIGHT float)"
 
     with conn.cursor() as cur:
         # cur.execute("drop table if exists ITEM")
@@ -49,13 +50,15 @@ def lambda_handler(event, context):
         # logging.info("Successfully dropped PAYMENT_INFO")
         # cur.execute("drop table if exists SHIPPING_INFO")
         # logging.info("Successfully dropped SHIPPING_INFO")
-
+        # cur.execute("drop table if exists PACKET")
+        # logging.info("Successfully dropped PACKET")
 
         cur.execute(item_sql)
         cur.execute(order_sql)
         cur.execute(line_item_sql)
         cur.execute(payment_sql)
         cur.execute(shipping_sql)
+        cur.execute(packet_sql)
         conn.commit()
         cur.execute("show tables")
         for result in cur:
@@ -68,4 +71,5 @@ def lambda_handler(event, context):
     
 
     return "Successful run"
+    
     
