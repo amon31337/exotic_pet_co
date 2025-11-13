@@ -108,11 +108,33 @@ def lambda_handler(event, context):
             }
         logging.info("payment processed")
 
+
+        #insert order details and time into the database
+        order_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cursor.execute(f"insert into CUSTOMER_ORDER (CUSTOMER_NAME, PAYMENT_INFO_TOKEN, ORDER_TIME) VALUES ('{paymentInfo['cardHolderName']}', '{token}', '{order_time}')")
+        logging.info("Customer order inserted")
+
+
+        cursor.execute(f"SELECT ID FROM CUSTOMER_ORDER WHERE CUSTOMER_NAME = '{paymentInfo['cardHolderName']}' AND ORDER_TIME = '{order_time}' AND PAYMENT_INFO_TOKEN = '{token}'")
+        result = cursor.fetchone()
+        if result:
+            order_id = result[0]
+        else:
+            return {
+                'statusCode': 400,
+                'headers': {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                },
+                'body': json.dumps({'error': 'Order not found after insertion'})
+            }
+
         #send shipping info for processing
         eventbridge = boto3.client('events')
         detail = {
             'shippingInfo': shippingInfo, 
             'businessID': 1234567890, 
+            'orderID': order_id,
             'shippingWeights': shippingWeights
         }
         eventbridge.put_events(
@@ -125,20 +147,13 @@ def lambda_handler(event, context):
             ]
         )
 
-        #insert order details and line items into the database
-        order_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        #(SELECT ID FROM SHIPPING_INFO WHERE ADDRESS1 = '{shippingInfo['addressLine1']}' AND ADDRESS2 = '{shippingInfo['addressLine2']}' AND CITY = '{shippingInfo['city']}' AND STATE = '{shippingInfo['state']}' AND POSTAL_CODE = '{shippingInfo['zip']}' LIMIT 1)
-        cursor.execute(f"insert into CUSTOMER_ORDER (CUSTOMER_NAME, PAYMENT_INFO_TOKEN, ORDER_TIME) VALUES ('{paymentInfo['cardHolderName']}', '{token}', '{order_time}')")
-        logging.info("Customer order inserted")
-
+        #insert customer order line items into the database
         for product in productList:
-            cursor.execute(f"insert into CUSTOMER_ORDER_LINE_ITEM (ITEM_ID, ITEM_NAME, QUANTITY, CUSTOMER_ORDER_ID_FK) VALUES ('{product['id']}', '{product['name']}', '{product['quantity']}', (SELECT ID FROM CUSTOMER_ORDER WHERE CUSTOMER_NAME = '{paymentInfo['cardHolderName']}' AND ORDER_TIME = '{order_time}' AND PAYMENT_INFO_TOKEN = '{token}'))")
+            cursor.execute(f"insert into CUSTOMER_ORDER_LINE_ITEM (ITEM_ID, ITEM_NAME, QUANTITY, CUSTOMER_ORDER_ID_FK) VALUES ('{product['id']}', '{product['name']}', '{product['quantity']}', '{order_id}')")
         logging.info("Customer order line item inserted")
 
         conn.commit()
         
-
-
     
     return {
         'statusCode': 200,
